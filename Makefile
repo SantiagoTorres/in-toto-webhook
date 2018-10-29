@@ -40,8 +40,8 @@ travis_release:
 	@docker push $(DOCKER_IMAGE_NAME):$(TRAVIS_TAG)
 
 exportcerts:
-	grep 'key.pem' deploy/webhook-certs.yaml | awk '{print $2}' | base64 -d > certs/key.pem
-	grep 'cert.pem' deploy/webhook-certs.yaml | awk '{print $2}' | base64 -d > certs/cert.pem
+	grep 'key.pem' deploy/webhook-certs.yaml | awk '{print $$2}' | base64 -d > certs/key.pem
+	grep 'cert.pem' deploy/webhook-certs.yaml | awk '{print $$2}' | base64 -d > certs/cert.pem
 
 testserialize:
 	curl -k https://localhost:8080/links/someorganization/someimage/package.2f89b927.link \
