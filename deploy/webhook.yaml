@@ -20,10 +20,6 @@ spec:
         - name: intoto-webhook
           image: controlplane/in-toto-webhook:0.1-dev
           imagePullPolicy: Always
-          securityContext:
-            readOnlyRootFilesystem: false
-            runAsNonRoot: true
-            runAsUser: 10001
           command:
             - ./in-toto
           args:
