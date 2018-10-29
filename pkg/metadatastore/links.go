@@ -22,7 +22,7 @@ func HandleLinkSerialization(w http.ResponseWriter,
 	dump, err := httputil.DumpRequest(r, true)
 
 	if err != nil {
-		fmt.Printf("proper error handling is in order here")
+		fmt.Printf("proper error handling is in order here\n")
 	}
 	// Should handle by returning a 200 ok or so
 	fmt.Fprintf(w, "%q\n", dump)
@@ -43,7 +43,7 @@ func parseURI (location *url.URL) (string, string) {
     normalizedPath, err := filepath.Rel(base, requestUri)
     if err != nil {
         // FIXME: we should be floating errors upwards here...
-        panic(fmt.Sprintf("The couldn't compute the base properly: %v", err))
+        panic(fmt.Sprintf("The couldn't compute the base properly: %v\n", err))
     }
 
     namespace, linkName = path.Split(normalizedPath)
@@ -63,9 +63,11 @@ func serializeLink(link string, namespace string, data []byte) {
 
 	err := os.MkdirAll(namespace, 0755)
 	if err != nil {
-		fmt.Printf("couldn't create namespace dir!")
+		fmt.Printf("couldn't create namespace dir! %v\n", err)
 	}
 
-	ioutil.WriteFile(fmt.Sprintf("%s/%s", namespace, link), data, 0644)
-
+	err = ioutil.WriteFile(fmt.Sprintf("%s/%s", namespace, link), data, 0644)
+	if err != nil {
+		fmt.Printf("Error writing to file: %v\n", err)
+	}
 }
