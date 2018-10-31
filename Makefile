@@ -21,6 +21,10 @@ test:
 certs:
 	cd deploy && ./gen-certs.sh
 
+.PHONY: configmaps
+configmaps:
+	cd deploy && ./gen-configmaps.sh
+
 .PHONY: deploy
 deploy:
 	-kubectl create namespace in-toto
