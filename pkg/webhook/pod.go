@@ -35,13 +35,14 @@ func (d *PodValidator) Validate(_ context.Context, obj metav1.Object) (bool, val
 		container = kObj.Spec.Containers[i]
 		fmt.Printf("Validating %v\n", container.Image)
 		result, err := in_toto.NewClient().ScanContainer(container.Image)
+		fmt.Printf("%s\n", result.Output)
 		if err != nil {
 			d.Logger.Errorf("in-toto validation failed %v", err)
-			return false, validating.ValidatorResult{Valid: true}, nil
+			return false, validating.ValidatorResult{Valid: false}, nil
 		}
 		if result.Retval != 0 {
 			d.Logger.Errorf("in-toto validation failed %v", result.Error)
-			return false, validating.ValidatorResult{Valid: true}, nil
+			return false, validating.ValidatorResult{Valid: false}, nil
 		}
 	}
 
