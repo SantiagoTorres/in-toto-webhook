@@ -2,28 +2,24 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: intoto-webhook
+  name: in-toto-webhook
   labels:
-    app: intoto-webhook
+    app: in-toto-webhook
   namespace: in-toto
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: intoto-webhook
+        app: in-toto-webhook
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8081"
     spec:
       containers:
-        - name: intoto-webhook
+        - name: in-toto-webhook
           image: controlplane/in-toto-webhook:0.1-dev
           imagePullPolicy: Always
-          securityContext:
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            runAsUser: 10001
           command:
             - ./in-toto
           args:
@@ -52,21 +48,26 @@ spec:
             - name: webhook-certs
               mountPath: /etc/webhook/certs
               readOnly: true
+            - mountPath: /home/app/lukebond/demo-api
+              name: demo-api-in-toto-layout
       volumes:
         - name: webhook-certs
           secret:
             secretName: in-toto-webhook-certs
+        - name: demo-api-in-toto-layout
+          configMap:
+            name: in-toto-webhook
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: intoto-webhook
+  name: in-toto-webhook
   labels:
-    app: intoto-webhook
+    app: in-toto-webhook
   namespace: in-toto
 spec:
   ports:
   - port: 443
     targetPort: 8080
   selector:
-    app: intoto-webhook
+    app: in-toto-webhook

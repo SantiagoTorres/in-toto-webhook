@@ -7,6 +7,27 @@ metadata:
     app: in-toto-webhook
     kind: validator
 webhooks:
+  - name: pod.admission.intoto.io
+    clientConfig:
+      service:
+        name: in-toto-webhook
+        namespace: in-toto
+        path: "/pod"
+      caBundle: CA_BUNDLE
+    rules:
+      - operations:
+        - CREATE
+        - UPDATE
+        apiGroups:
+        - ""
+        apiVersions:
+        - v1
+        resources:
+        - pods
+    failurePolicy: Fail
+    namespaceSelector:
+      matchLabels:
+        in-toto-validation: enabled
   - name: deployment.admission.intoto.io
     clientConfig:
       service:
